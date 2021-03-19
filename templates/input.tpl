@@ -1,77 +1,193 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Style-Type" content="text/css" />
-<meta http-equiv="Content-Script-Type" content="text/javascript" />
-<meta http-equiv="imagetoolbar" content="no" />
-<meta name="keywords" content="電通,Dentsu,でんつう,広告会社,広告代理店,GoodInnovation,新規お取引のご相談,投資家情報に関するお問い合わせ,株式に関するお問い合わせ,採用に関するお問い合わせ,クリエイティブに関するお問い合わせ,個人情報に関するお問い合わせ,その他のお問い合わせ" />
-<meta name="description" content="電通へのお問い合わせに関しての情報をご覧頂けます。" />
-<title>クリエイティブに関するお問い合わせ - 電通</title>
-<link rel="stylesheet" type="text/css" href="mycss.css">
-<link rel="stylesheet" type="text/css" href="index.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTE 3 | Log in</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" type="text/css" href="https://contact.dentsu.jp/img?id=8&t=9lwd&v=4fa273ee">
-<link rel="stylesheet" type="text/css" href="https://contact.dentsu.jp/img?id=9&t=9lwd&v=9deac94d">
-<link rel="stylesheet" type="text/css" href="https://contact.dentsu.jp/img?id=10&t=9lwd&v=11ca2aa3">
-<link rel="stylesheet" type="text/css" href="https://contact.dentsu.jp/img?id=11&t=9lwd&v=f2198aa5">
-<script type="text/javascript" src="https://contact.dentsu.jp/img?id=12&t=9lwd&v=4be94c2c"></script>
-<script type="text/javascript" src="https://contact.dentsu.jp/img?id=13&t=9lwd&v=d43c19a6"></script>
-<script type="text/javascript" src="https://contact.dentsu.jp/img?id=14&t=9lwd&v=88eb5d97"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="./css/admin_lte/plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="./css/admin_lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="./css/admin_lte/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <title>ログインフォーム</title>
 
+<style>
+ .required{
+   color:red;
+   font-size: 14px;
+   }
+   .error{
+   color:red;
+   font-size: 14px;
+   }
+</style>
+
+
+
+  
+</head>
+<body class="hold-transition login-page">
+  <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">お問合わせフォーム</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form method="post" action="" class="needs-validation" novalidate>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>名前<span class="required">＊</span></label>
+                     <span class="error">{$name_error}</span>
+                    <input type="text" name="name"  class="form-control" value="{$name}" size="30" maxlength="50">
+                  </div>
+
+                  <div class="form-group">
+                    <label>メールアドレス<span class="required">＊</span></label>
+                     <span class="error">{$e_mail_error}</span>
+                    <input type="email" name="e_mail"  class="form-control" value="{$e_mail}" size="30" maxlength="50">
+                  </div>
+                  
+                  <div class="form-group">
+                   <label>お聞きしたい内容<span class="required">＊</span></label>
+                    <span class="error">{$question_error}</span>
+                        {foreach $question_config_data as $key => $question_v}
+                          <div class="form-check">
+                            {if in_array($key,$question)}
+                            <label class="form-check-label"><input type="checkbox" name="question[]" value="{$key}" checked="checked">{$question_v}<label>
+                            {else}
+                            <label class="form-check-label"><input type="checkbox" name="question[]" value="{$key}">{$question_v}<label>
+                            {/if}
+                          </div>
+                        {/foreach}
+                  </div>
+                      
+                  <div class="form-group">
+                    <label>カテゴリ<span class="required">＊</span></label>
+                     <span class="error">{$category_error}</span></th>
+                     {foreach $category_config_data as $key  => $category_v}
+                      <div class="form-check">
+                        {if $key == $category}
+                        <label class="form-check-label"><input type="radio" name="category" value="{$key}" checked="checked">{$category_v}</label>
+                        {else}
+                         <label class="form-check-label"><input type="radio" name="category" value="{$key}">{$category_v}</label>
+                        {/if}
+                      </div>
+                     {/foreach}
+                  </div>
+
+                  <div class="form-group">
+                    <label>電話可能日<span class="required">＊</span></label>
+                    <span class="error">{$date_error}</span>
+                    <input type="date" name="date" value="{$date}">
+                  </div>
+
+                  <div class="form-group">
+                    <label>電話可能時間帯<span class="required">＊</span></label>
+                    <span class="error">{$time_error}</span>
+                    <span class="error">{$differ_time_error}</span>
+                    <input type="time" name="time_start"  min="10:00" max="19:00" value={$time_start} >
+                    <span>〜</span>
+                    <input type="time" name="time_end" min="10:00" max="19:00" value={$time_end}>
+                  </div>
+
+                   <div class="form-group">
+                    <label>コース<span class="required">＊</span></label>
+                    <span class="error">{$course_error}</span>
+                    <select name="course" >
+                    <option  selected="selected">---お選び下さい---</option>
+                    {foreach $course_config_data as $key  => $course_v}
+                      {if $course_v == $course}
+                     <option selected>{$course_v}</option>
+                     {else}
+                    <option >{$course_v}</option>
+                      {/if}
+                     {/foreach}
+                     </select>
+                  </div>
+
+                  <div class="form-group">    
+                      <label>お問い合わせ内容<span class="required">＊</span></label>
+                       <span class="error">{$comment_error}</span>
+                         <textarea name="comment"class="form-control" rows="4">{$comment}</textarea>
+                  </div>
+
+                </div>
+                <div class="card-footer">
+                 <input type="submit" name="to_signup" type="submit" class="btn btn-primary" value="確認" />
+                </div>
+              </form>
+            </div>
+
+  </div>
+
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+<!-- jQuery -->
+
+<script src="./css/admin_lte/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="./css/admin_lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="./css/admin_lte/dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+
+{* <!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+<title>ログインフォーム</title>
+</head>
+<style>
+ .is-error{
+   color:red;
+   font-size: 14px;
+   }
+</style>
+<body> *}
+
+
+
+
+{* 
 <style>
 .error{
     color:red;
 }
-</style>
-</head>
-<body class="other">
-    <div id="contentAll">
-    <div id="headLogo">
-        <p><a href="https://www.dentsu.co.jp/"><img src="https://contact.dentsu.jp/img?id=290&t=9lwd&v=2ccd6373" width="150" height="32" alt="dentsu" /></a></p>
-    <!--/headLogo--></div>
-    <div id="contentHeadWrapper">
-        <div id="contentHead">
-            
-            <ul id="globalMenu"><!--
-                --><li id="globalMenu01"><a href="https://www.dentsu.co.jp/vision/">企業情報</a></li><!--
-                --><li id="globalMenu02"><a href="https://www.dentsu.co.jp/business/">事業紹介</a></li><!--
-                --><li id="globalMenu03"><a href="https://www.dentsu.co.jp/global/">グローバルネットワーク</a></li><!--
-                --><li id="globalMenu04"><a href="https://www.dentsu.co.jp/news/">ニュース</a></li><!--
-                --><li id="globalMenu05"><a href="https://www.dentsu.co.jp/ir/">IR情報</a></li><!--
-                --><li id="globalMenu06"><a href="https://www.dentsu.co.jp/csr/">CSR</a></li><!--
-                --><li id="globalMenu07"><a href="https://www.dentsu.co.jp/recruit/">採用情報</a></li><!--
-            --></ul>
-        <!--/contentHead--></div>
-    <!--/contentHeadWrapper--></div>
-        
-        <div id="breadCrumb">
-            <ul><!--
-                --><li><a href="https://www.dentsu.co.jp/">HOME</a></li><!--
-                --><li><a href="https://www.dentsu.co.jp/mail/">お問い合わせ</a></li><!--
-                --><li>クリエイティブに関するお問い合わせ</li>
-        <!--
-                  
-        --></ul>
-        <!--/breadCrumb--></div>
-        
-        <div id="contentBodyWrapper">
-            <div id="contentBody">
-            
-                <h1>Contact</h1>
-             
-                <div id="contentBodyMain" class="wideContent">
-                <h2>クリエイティブに関するお問い合わせ</h2>
-                <p class="BodyText margB10">お問い合わせをいただきまして、ありがとうございます。<br />
-                ご返答させていただくにあたり、できる限り早くご返答をさせていただくつもりですが、特定の広告主や広告作品に関するお問い合わせは、お答えできない場合があることをご了承ください。<br />
-                また、ご相談内容や諸条件によりましてはお返事に日数がかかる場合もございます。あわせてご了承ください。</p>
-                <ul class="List">
-                    <li>内容は可能な限り具体的にご記入をお願いいたします。</li>
-                    <li><span class="required">＊</span>印の項目は必ずご記入をお願いいたします。</li>
-                </ul>
-                <form action="contact.php?gui=2" method="post">
-                 <table class="formTable">
+</style> *}
+
+
+{*        
                     <tr>
                      <th>名前<span class="required">＊</span>
                      <span class="error">{$name_error}</span></th>
@@ -169,35 +285,16 @@
 
                     <input type="hidden" name="__search_e_165" id="__search_e_165" value="" /><input type="hidden" name="__name" value="" /><input type="hidden" name="f" id="f" value="13" />
 					<input type="hidden"name="login_id"   value="{$login_id}">
-</form>
-                <!--/contentBodyMain--></div>
-                
-            <!--/contentBody--></div>
-        <!--/contentBodyWrapper--></div>
-        <div id="contentFootWrapper">
-    <div id="contentFoot"><!--
-        --><!--
-        --><ul class="utilityLink"><!--
-                    --><li><a href="https://www.dentsu.co.jp/terms/privacy_policy.html">個人情報の取扱いについて</a></li><!--
-                    --><li><a href="https://www.dentsu.co.jp/terms/">このサイトのご利用にあたって</a></li><!--
-                    --><li><a href="https://www.dentsu.co.jp/terms/rss.html">RSSについて</a></li><!--
-                    --><li><a href="https://www.dentsu.co.jp/lookup/sitemap.html">サイトマップ</a></li><!--
-                    --><li><a href="https://www.dentsu.co.jp/mail/">お問い合わせ</a></li><!--
-        --></ul><!--
-    --></div>
-    <p id="footLogo"><a href="https://www.dentsu.co.jp/"><img src="https://contact.dentsu.jp/img?id=292&t=9lwd&v=98138e88" width="96" height="21" alt="dentsu" /></a></p>
-    <p id="copyRight">&copy; DENTSU INC. ALL RIGHTS RESERVED.</p>
-    <!--/contentFootWrapper--></div>
-    <div id="fixPageTop">
-        <p><a href="#"><img src="https://contact.dentsu.jp/img?id=293&t=9lwd&v=aaad2206" alt="ページTOPへ" /></a></p>
-    <!--/fixPageTop--></div>
+</form> *}
+               
+    <!--/fixPageTop-->
 <!-- SiteCatalyst code version: H.21.
 Copyright 1996-2010 Adobe, Inc. All Rights Reserved
 More info available at http://www.omniture.com -->
-<script type="text/javascript" src="https://contact.dentsu.jp/img?id=116&t=9lwd&v=0e6b34bc"></script>
+
 <!--/DO NOT REMOVE/-->
 <!-- End SiteCatalyst code version: H.21. -->
-<!--/contentAll--></div>
+<!--/contentAll-->
     
 {* <style>
 .gdpr #contentFootWrapper{
@@ -296,5 +393,3 @@ More info available at http://www.omniture.com -->
     }
   })();
 </script> *}
-</body>
-</html>
