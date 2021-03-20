@@ -29,44 +29,43 @@
    font-size: 14px;
    }
 </style>
-
-
-
   
 </head>
 <body class="hold-transition login-page">
   <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">お問合わせフォーム</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form method="post" action="" class="needs-validation" novalidate>
+    <div class="card-header">
+     <h3 class="card-title">お問合わせフォーム</h3>
+   </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+      
+              <form method="post" action="contact.php?gui=2" class="needs-validation" novalidate>
+
                 <div class="card-body">
                   <div class="form-group">
                     <label>名前<span class="required">＊</span></label>
-                     <span class="error">{$name_error}</span>
-                    <input type="text" name="name"  class="form-control" value="{$name}" size="30" maxlength="50">
+                      <span class="error">{$name_error}</span>
+                    <input type="text" name="name"  class="form-control" value="{$name}" size="30" maxlength="50" required>
                   </div>
 
                   <div class="form-group">
                     <label>メールアドレス<span class="required">＊</span></label>
-                     <span class="error">{$e_mail_error}</span>
+                      <span class="error">{$e_mail_error}</span>
                     <input type="email" name="e_mail"  class="form-control" value="{$e_mail}" size="30" maxlength="50">
                   </div>
                   
                   <div class="form-group">
                    <label>お聞きしたい内容<span class="required">＊</span></label>
                     <span class="error">{$question_error}</span>
-                        {foreach $question_config_data as $key => $question_v}
-                          <div class="form-check">
-                            {if in_array($key,$question)}
-                            <label class="form-check-label"><input type="checkbox" name="question[]" value="{$key}" checked="checked">{$question_v}<label>
-                            {else}
-                            <label class="form-check-label"><input type="checkbox" name="question[]" value="{$key}">{$question_v}<label>
-                            {/if}
-                          </div>
-                        {/foreach}
+                    {foreach $question_config_data as $key => $question_v}
+                      <div class="form-check">
+                        {if in_array($key,$question)}
+                        <label class="form-check-label"><input type="checkbox" name="question[]" value="{$key}" checked="checked">{$question_v}<label>
+                        {else}
+                        <label class="form-check-label"><input type="checkbox" name="question[]" value="{$key}">{$question_v}<label>
+                        {/if}
+                      </div>
+                    {/foreach}
                   </div>
                       
                   <div class="form-group">
@@ -82,7 +81,6 @@
                       </div>
                      {/foreach}
                   </div>
-
                   <div class="form-group">
                     <label>電話可能日<span class="required">＊</span></label>
                     <span class="error">{$date_error}</span>
@@ -98,7 +96,7 @@
                     <input type="time" name="time_end" min="10:00" max="19:00" value={$time_end}>
                   </div>
 
-                   <div class="form-group">
+                  <div class="form-group">
                     <label>コース<span class="required">＊</span></label>
                     <span class="error">{$course_error}</span>
                     <select name="course" >
@@ -120,46 +118,42 @@
                   </div>
 
                 </div>
+
                 <div class="card-footer">
                  <input type="submit" name="to_signup" type="submit" class="btn btn-primary" value="確認" />
                 </div>
+
               </form>
-            </div>
-
-  </div>
-
-
-<script>
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-(function() {
-  'use strict';
-  window.addEventListener('load', function() {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-        if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
-</script>
-<!-- jQuery -->
-
-<script src="./css/admin_lte/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="./css/admin_lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="./css/admin_lte/dist/js/adminlte.min.js"></script>
-
+           {* </div> *}
+   </div>
+  <script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+  </script>
+  <!-- jQuery -->
+  <script src="./css/admin_lte/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="./css/admin_lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="./css/admin_lte/dist/js/adminlte.min.js"></script>
 </body>
 </html>
-
 {* <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -175,18 +169,12 @@
    }
 </style>
 <body> *}
-
-
-
-
 {* 
 <style>
 .error{
     color:red;
 }
 </style> *}
-
-
 {*        
                     <tr>
                      <th>名前<span class="required">＊</span>
@@ -282,7 +270,6 @@
                         </td>
                     </tr>
                     </table>
-
                     <input type="hidden" name="__search_e_165" id="__search_e_165" value="" /><input type="hidden" name="__name" value="" /><input type="hidden" name="f" id="f" value="13" />
 					<input type="hidden"name="login_id"   value="{$login_id}">
 </form> *}
@@ -291,7 +278,6 @@
 <!-- SiteCatalyst code version: H.21.
 Copyright 1996-2010 Adobe, Inc. All Rights Reserved
 More info available at http://www.omniture.com -->
-
 <!--/DO NOT REMOVE/-->
 <!-- End SiteCatalyst code version: H.21. -->
 <!--/contentAll-->
