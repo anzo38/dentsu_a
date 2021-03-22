@@ -31,7 +31,6 @@
     display:none;
   }
   </style>
-
 </head>
 <body  class="hold-transition login-page">
   <div class="card card-primary">
@@ -67,10 +66,9 @@
           <input type="hidden" name="date" value="{$date}">
           <input type="hidden" name="time_start" value="{$time_start}">
           <input type="hidden" name="time_end" value="{$time_end}">
-          
+          <input type="hidden" name="course" value="{$course}">
           <input type="hidden" name="comment" value="{$comment}">
          
-
           <div class="form-group">
             <p>ID（半角英数字のみ）</p>
             <span class="error">{$login_id_error}</span><br>
@@ -84,7 +82,6 @@
             <span class="error">{$pass_match_error}</span><br>
             <input type="password"  name="pass" placeholder="Password"  value="{$pass}" >
           </div>
-
           <div class="form-group">
             <p>パスワード再入力</p>
             <span class="error">{$pass2_error}</span><br>
@@ -96,7 +93,6 @@
         <div class="card-footer">
           <input type="submit" name="to_confirm" class="btn btn-primary" value="確認" >
         </div>
-
       </form>
       {* 修正する *}
      <div class="card-footer">
@@ -118,7 +114,6 @@
               {/foreach}
               <select>
               <input type="hidden" name="comment" value="{$comment}">
-
               <input type="hidden"name="login_id"  placeholder="E-mail" value="{$login_id}">
              <input type="submit" class="btn btn-primary" value="修正する">
         </form>
@@ -146,12 +141,10 @@
   })();
   </script>
   <!-- jQuery -->
-
   <script src="./css/admin_lte/plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap 4 -->
   <script src="./css/admin_lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="./css/admin_lte/dist/js/adminlte.min.js"></script>
-
 </body>
 </html>

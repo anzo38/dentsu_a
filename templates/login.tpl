@@ -45,7 +45,7 @@
 
         <label for="pass_word_n">password</label>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" id="pass_word_n" placeholder="password" name="password" required>
+          <input type="password" class="form-control" placeholder="password" name="login_password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>

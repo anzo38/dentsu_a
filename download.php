@@ -1,20 +1,18 @@
 <?php
 
-require('./check.php');
+require('./admin.php');
 require('./database.php');
 
 /**
  * TODO：コメントを記載するようにしましょう。
  */
-class Download extends Check {
-   public $csv=0;
-   public $id="";
+class Download extends Admin {
+//    protected $csv=0;
+//    public $id="";
 
     function __construct(){
         parent::__construct();
-        //↓TODO：不要では？
-        $this->session_data = new Check();
-
+       
         $this->csv = htmlspecialchars($_GET['csv']);
         $this->id = htmlspecialchars($_GET['id']);
         $this->name = htmlspecialchars($_GET['name']);
@@ -133,8 +131,8 @@ class Download extends Check {
                     header('Content-Disposition: attachment; filename=' . $csv_name);
                     mb_convert_encoding($csv_data, 'sjis-win', 'utf-8');
                     echo $csv_data;
-
-
+        // $this->smarty->assign('csv',$csv_data);
+        // $this->smarty->display("test.tpl");   
 
         
     }

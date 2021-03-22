@@ -1,61 +1,72 @@
 <?php
-// require_once('smarty/Smarty.class.php');
-
-require('./check.php');
+require_once('./admin.php');
 require('./database.php');
 
 
-    class Member extends Check {
+
+    class Member extends Admin {
        
-        private $session_data="";
-        private  $result_id="";
-        private  $search_id="";
-       
+        protected $session_data="";
+        protected $result_id="";
+        protected $search_id="";
+        protected $util;
+
+        private $member=0;
+
         function __construct(){
             parent::__construct();
-            $this->session_data = new Check();
+            $this->member = htmlspecialchars($_GET['member']);
+            $this->search = htmlspecialchars($_POST['search']);
 
-            
-          
-      
+            // $this->gui = htmlspecialchars($_GET['member']);
             $csv_dl=$_POST["csv_dl"];
         }
 
  
 
         function execute(){
-        //  ini_set('display_errors', "On");
-         
-         $this->session_data->config_hash();
-      
-                 
-        //  $this->csv_dl();
-      
-   
-        //  $this->smarty->display("search_r/ults_data.tpl");
-        
-         $this->search();
-        //  $this->csv();
-    }
-        
+            // 継続的認証
+            $this->util->is_auth();
 
-   
+            if($this->member == 1){
+                //検索結果の表示の遷移先
+                $this->member1();
+            
+            }else{
+                $this->member1();
+            }
+           
+        }
 
+        function member1(){
+            // if($this->){
 
-   
+            // }
+            $this->search();
+           
+            $this->smarty->display('member.tpl');
+
+        }
+        // function member2(){
+        //     $this->search();
+
+        //     $this->smarty->display('member.detail.tpl');
+
+        // }
+  
     // データベースから情報を取得
        
        function search(){
 
-            //TODO　htmlspecialcharsを利用しましょう。
-            $search=$_POST["search"];
+            //TODO htmlspecialcharsを利用しましょう。:済
+            $search=htmlspecialchars($_POST["search"]);
             $search_id=htmlspecialchars($_POST["search_id"]);
             $search_name=htmlspecialchars($_POST["search_name"]);
             $search_e_mail=htmlspecialchars($_POST["search_e_mail"]);
             $search_login_id=htmlspecialchars($_POST["search_login_id"]);
             $search_date=htmlspecialchars($_POST["search_date"]);
-            //TODO　htmlspecialcharsを利用しましょう。
-            $back=$_POST["back"];
+            //TODO htmlspecialcharsを利用しましょう。:済
+            $back=htmlspecialchars($_POST["back"]);
            
 
             //echo (Dbmanager->exec("select * from inquiry;"));
@@ -100,77 +111,22 @@ require('./database.php');
               
              //結果を表示    
                $result = DbMabager::getInstance()->exec($query);
-
+               $this->smarty->assign('result', $result);
                 if(empty($result)){
                     $this->smarty->assign('no_data',"情報がありません");
                 }
                 /**
-                 * TODO:下記は全てtplにもっていくこと。
+                 * TODO:下記は全てtplにもっていくこと。：済
                  * TODO:member.tplは複数のTPLで構成されているが、一つのTPLでまとめて処理をすること。
-                 * 
+                 * ：済（member.tpl）へ 下記消去済み
                  */
-         
-                foreach($result as $k => $v){
-                    
-                    foreach($v as $i => $j){
-
-                        if($i== "id"){
-                            $result_id= $j;                
-                        }
-                        if($i== "name"){
-                            $result_name = $j;   
-                        }
-                        if($i== "e_mail"){
-                            $result_e_mail = $j;  
-                        }
-                        if($i== "login_id"){
-                            $result_login_id = $j;     
-                        }
-                        if($i== "date"){
-                            $result_date = $j;
-                        }
-                           
-                    
-                    }
-                  
-                  
-                    $this->smarty->assign('result_id', $result_id);
-                    $this->smarty->assign('result_name', $result_name); 
-                    $this->smarty->assign('result_e_mail',  $result_e_mail); 
-                    $this->smarty->assign('result_login_id',  $result_login_id);  
-                    $this->smarty->assign('result_date',  $result_date);
-                    $this->smarty->display("search_results_data.tpl");
-                   
-                  
-                }
-                $this->smarty->display("search_results_table.tpl");
-            }  
-         
-
-           
-           
-            $this->smarty->display('member.tpl');
+            }
+                
         }
 
 
       
-        // function assign_from_input(){
-        //     $this->smarty->assign('id', $this->search_id);
-        //     $this->smarty->assign('name', $this->search_name);
-        //     $this->smarty->assign('e_mail', $this->search_e_mail);
-        //     $this->smarty->assign('login_id', $this->search_login_id);
-        //     $this->smarty->assign('date', $this->search_date);
-           
-
-        // }
-        // function assigon_from_db(){
-
-        //     $this->smarty->assign('result_id', $this->result_id);
-        //     $this->smarty->assign('result_name', $this->result_name); 
-        //     $this->smarty->assign('result_e_mail',  $this->result_e_mail); 
-        //     $this->smarty->assign('result_login_id',  $this->result_login_id);  
-        //     $this->smarty->assign('result_date',  $this->result_date);
-        // }
+        
     }
 
 
