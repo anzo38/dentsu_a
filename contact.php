@@ -1,6 +1,9 @@
 <?php
+// require_once('./db_manager.php');
 require_once('front.php');
-// require_once('smarty/Smarty.class.php');
+require_once('utility.php');
+require_once('db_manager.php');
+
 // require('validate.php');
 
 /**
@@ -27,6 +30,7 @@ class Contact extends Front {
     public  $pass="";
 
     function __construct(){
+        // ini_set('display_errors', "On");
         parent::__construct();
         $this->gui = htmlspecialchars($_GET['gui']);
         $this->name = htmlspecialchars($_POST['name']);
@@ -51,7 +55,7 @@ class Contact extends Front {
 
   function execute(){
     // $validate = new Validate();
-    
+    // ini_set('display_errors', "On");
        //TODO：$this->guiに何も入力されていなかったら、1にいくようにしましょう。:済
         if($this->gui == 1){
             //入力画面の遷移先
@@ -78,10 +82,10 @@ class Contact extends Front {
    */
 //   入力画面
     function gui1(){
-        parent::const_data();
-        $this->load_config_data();
-        $this->assign_value();
-        
+
+        $this->smarty->assign("question_config_data",$this->config_data["question"]);
+        $this->smarty->assign("category_config_data",$this->config_data["category"]);
+        $this->smarty->assign("course_config_data",$this->config_data["course"]);
         $this->smarty->display('input.tpl');
     }
 
@@ -93,12 +97,12 @@ class Contact extends Front {
      
       // $this->load_config_data();
         if($this->validate()){
-            $this->load_config_data();
+            // $this->load_config_data();
             $this->assign_value();
             $this->smarty->display('input.tpl');
         }else{
             $this->assign_value();
-            $this->load_config_data();
+            // $this->load_config_data();
             $this->smarty->display('signup.tpl');
         }
 
@@ -114,7 +118,7 @@ class Contact extends Front {
   //確認画面
   function gui3(){
     // echo $this->smarty->getConfigVars("system_const");
-    $this->load_config_data();
+    // $this->load_config_data();
       if($this->login_validate()){
       $this->assign_value();
    
@@ -136,8 +140,8 @@ class Contact extends Front {
    */
    //完了画面
     function gui4(){
-        parent::const_data();
-        $this->load_config_data();
+        // parent::const_data();
+        // $this->load_config_data();
         $this->insert_data_to_db();
         $this->assign_value();
       
@@ -155,45 +159,45 @@ class Contact extends Front {
      * 
      */
       //  問い合わせた側
+
         $mailto = $this->smarty->getConfigVars("ADMIN_MAIL_TO");
         $header = "From: $mailto\nReply-To: $mailto\n";
         $title = $this->smarty->getConfigVars("MAIL_TITLE");
         $message = $this->smarty->fetch("mail.tpl");
-        mb_language("Japanese");
-        mb_internal_encoding("UTF-8");
-        if(mb_send_mail($this->e_mail,$title,$message,$header,'-f' . 'yamazaki@uns-j.co.jp')){
-        $this->smarty->assign('successful', $this->smarty->getConfigVars("successful"));
-        // $this->smarty->getConfigVars("successful");
-        
-        }else{
-        $this->smarty->assign('decline', $this->smarty->getConfigVars("decline"));
-        }
-    
         // 管理者側
         $mailto_admin = $this->smarty->getConfigVars("ADMIN_MAIL_TO");
         $header_admin = "From: $mailto_admin\nReply-To: $mailto_admin\n";
         $title_admin = $this->smarty->getConfigVars("ADMIN_MAIL_TITLE");
         $message_admin = $this->smarty->fetch("mail_admin.tpl");
-    
-        if(mb_send_mail('yamazaki@uns-j.co.jp',$title_admin,$message_admin,$header_admin,'-f' . 'yamazaki@uns-j.co.jp')) {
-        $this->smarty->assign('successful_admin', 'お問合わせがありました。
-        各担当者は確認後、対応をお願いします');
-        }
 
-       
-
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+        
+        // if(mb_send_mail($this->e_mail,$title,$message,$header,'-f' . $mailto)){
+        //     if(mb_send_mail($mailto_admin,$title_admin,$message_admin,$header_admin,'-f' . $mailto_admin)) {
+        //         $this->smarty->assign('successful', $this->smarty->getConfigVars("SUCCESSFUL"));
+        //         }else{
+        //         $this->smarty->assign('decline', $this->smarty->getConfigVars("DECLINE"));
+        //     }
+        // }
         $this->smarty->display('complete.tpl');  
     }
+
+
 
 
  /**
   * TODO：下記のようなDB接続関数は一番上の親クラスがObjectとしてもっておくようにしましょう。:済 
   */
     function insert_data_to_db(){
+        
        //contactテーブル
         $contact = 'INSERT INTO contact (name, e_mail, category, date, time_start, time_end, course, comment, login_id)  VALUE (:name, :e_mail, :category, :date, :time_start, :time_end, :course, :comment, :login_id)';
         // parent::db_conect();
-        $prepare = parent::db_conect()->prepare($contact);
+        // DbManagerでいんさーと試みたが組み方わからず
+        $prepare=$this->dbh->prepare($contact);
+       
+        // $prepare = parent::db_conect()->prepare($contact);
         $prepare->bindValue(':name', $this->name, PDO::PARAM_STR);
         $prepare->bindValue(':e_mail', $this->e_mail, PDO::PARAM_STR);
         $prepare->bindValue(':category', $this->category, PDO::PARAM_STR);
@@ -203,19 +207,28 @@ class Contact extends Front {
         $prepare->bindValue(':course', $this->course, PDO::PARAM_STR);
         $prepare->bindValue(':comment', $this->comment, PDO::PARAM_STR);
         $prepare->bindValue(':login_id', $this->login_id, PDO::PARAM_STR);
+        
         $prepare ->execute();
+        
+        // $last_id = $this->db_conect()->lastInsertId("id");
+        $last_id = $this->dbh->lastInsertId();
+       
+
        //questionテーブル
-       //questionの$last_id取得できないかも
-        $last_id= parent::db_conect()->lastInsertId();
+       //questionの$last_id取得できない
         $questions = 'INSERT INTO questions (contact_id, question)  VALUE (:contact_id, :question)';
-        $prepare= parent::db_conect()->prepare($questions);
+        $prepare=$this->dbh->prepare($questions);
+        
+        var_dump($prepare);
+        var_dump($last_id);
+        $prepare->bindValue(':contact_id', $last_id, PDO::PARAM_INT);
+       
+        // foreach($this->question as $k => $v){
+        //     $prepare->bindValue(':question', $v, PDO::PARAM_STR);
+        //     $prepare ->execute();
+        // }
 
-        $prepare->bindValue(':contact_id', $last_id, PDO::PARAM_STR);
-
-        foreach($this->question as $k => $v){
-            $prepare->bindValue(':question', $v, PDO::PARAM_STR);
-            $prepare ->execute();
-        }
+       
      
 
     }
@@ -330,29 +343,29 @@ class Contact extends Front {
 
 
     // confファイルのデータによって項目が増える
-    function  load_config_data(){
-        // $conf_data="";
-        //TODO：CONF情報は親クラスで保持させるようにしましょう。---START---:済
-        // $conf_data=$this->smarty->getConfigVars();
+    // function  load_config_data(){
+    //     // $conf_data="";
+    //     //TODO：CONF情報は親クラスで保持させるようにしましょう。---START---:済
+    //     // $conf_data=$this->smarty->getConfigVars();
 
 
-        // foreach($conf_data as $k =>$v){
-        //   if (preg_match("/question/",$k)){
-        //     $this->config_data["question"][$k]=$v;
-        //   }elseif(preg_match("/category/",$k)){
-        //     $this->config_data["category"][$k]=$v;
-        //   }elseif(preg_match("/course/",$k)){
-        //     $this->config_data["course"][$k]=$v;
-        //   }elseif(preg_match("/db/",$k)){
-        //     $this->config_data["db"][$k]=$v;
-        //   }
-        // }
-        //TODO ---END---
-        parent::const_data();
-        $this->smarty->assign("question_config_data",$this->config_data["question"]);
-        $this->smarty->assign("category_config_data",$this->config_data["category"]);
-        $this->smarty->assign("course_config_data",$this->config_data["course"]);
-    }
+    //     // foreach($conf_data as $k =>$v){
+    //     //   if (preg_match("/question/",$k)){
+    //     //     $this->config_data["question"][$k]=$v;
+    //     //   }elseif(preg_match("/category/",$k)){
+    //     //     $this->config_data["category"][$k]=$v;
+    //     //   }elseif(preg_match("/course/",$k)){
+    //     //     $this->config_data["course"][$k]=$v;
+    //     //   }elseif(preg_match("/db/",$k)){
+    //     //     $this->config_data["db"][$k]=$v;
+    //     //   }
+    //     // }
+    //     //TODO ---END---
+    //     parent::const_data();
+    //     $this->smarty->assign("question_config_data",$this->config_data["question"]);
+    //     $this->smarty->assign("category_config_data",$this->config_data["category"]);
+    //     $this->smarty->assign("course_config_data",$this->config_data["course"]);
+    // }
 
 }
 

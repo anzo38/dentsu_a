@@ -39,16 +39,28 @@ class Member_detail extends Admin {
     
     function results_from_db(){
         
-        
+      
     //TODO:プレースホルダを利用すること。DBは親クラスのものを利用。
         $query="SELECT * FROM contact as c JOIN questions as q ON c.id = q.contact_id WHERE c.id=" . $this->result_id;
-        // print_r($query);exit;
-        $result = DbMabager::getInstance()->exec($query);
-        // $csv_data="氏名, 趣味, 好きな食べ物, お住まいの地域, パスワード\r\n";
+        // $query="SELECT * FROM contact as c JOIN questions as q ON c.id = q.contact_id WHERE c.id=:id";
+        // $prepare=$this->db_conect()->prepare($query);
+        // $prepare=$this->db_conect($query)->prepare($query);
+        // $prepare=$this->db_conect()->prepare($query);
+        // var_dump($this->exec($query));
+        $id = $this->result_id;
+        
+ 
+        // SQL実行文
+        // $result =$this->exec($query);
+        $id=$this->result_id;
+        // $this->db_conect()->bindValue(':id', $id, PDO::PARAM_INT);
+        // $prepare =$this->exec($query);
+        // $prepare->bindValue(':id', $this->result_id, PDO::PARAM_INT);
+        // $prepare ->execute();
         if(empty($result)){
             $this->smarty->assign('no_data',"情報がありません");
         }
-        // print_r($result);exit;
+        // // print_r($result);exit;
         $data="";
 
         $data=$result[0];

@@ -15,33 +15,96 @@
  */
 
 class Utility{
-  
+    
+    //Smartyオブジェクト
     private $smarty;
+
+    //Smartyによって取得されたコンフィグデータ（設定値）
+    private $config_data;
+   
 
     /**
      * TODOコメントを書きましょう。
      * smartyが使えるようにる(Smarty $smarty)
      */
-    public function __construct(Smarty $smarty){
-        $this->smarty = $smarty;
-    
+    public function __construct(){
+
+        
+        $this->smarty = $this->initializeSmarty();
+        $this->config_data = $this->initializeConfigData();
+    }
+
+    /**
+     * Smartyオブジェクトを返却
+     */
+    public function getSmarty() : Smarty{
+        return $this->smarty;
+    }
+
+    /**
+     * ConfigDataArrayの返却
+     */
+    public function getConfigDBData() : Array{
+        return $this->config_data["db"];
+    }
+
+    public function getConfigData() : Array {
+        return $this->config_data;
+    }
+
+    /**
+     * Smartyオブジェクトの生成
+     */
+    private function initializeSmarty() : Smarty{
+        //Smarty初期化                                                                                                              化
+        $smarty = new Smarty();
+
+        $smarty->template_dir = './templates/';
+        $smarty->compile_dir  = './templates_c/';
+        $smarty->setConfigDir('./configs/');
+        $smarty->configLoad('const.conf');                                
+        
+        return $smarty;
+    }
+
+    /**
+     * Smartyによって設定値の取得
+     */
+    private function initializeConfigData() : Array{
+        $conf_data=$this->smarty->getConfigVars();
+        foreach($conf_data as $k =>$v){
+            if (preg_match("/question/",$k)){
+                $config_data["question"][$k]=$v;
+            }elseif(preg_match("/category/",$k)){
+                $config_data["category"][$k]=$v;
+            }elseif(preg_match("/course/",$k)){
+                $config_data["course"][$k]=$v;
+            }
+            elseif(preg_match("/db/",$k)){
+                $config_data["db"][$k]=$v;
+            }
+            elseif(preg_match("/login/",$k)){
+                $config_data["login"][$k]=$v;
+            }
+        }
+        return $config_data;
     }
   
   
 
   
     // 継続的認証
-    function is_auth() {
-        session_start();
+    public function is_auth() : bool {
+        
     /**
      * TODO:コメントを記載しましょう。：済
      * 例）継続的認証ロジック
      * TODO：継続的認証という関数がわかるような命名にすること：済
      * 例）is_auth,isAuthなどの文字が好ましい
      */
-       $config_id= $this->smarty->getConfigVars()['login_id'];
-       $config_pass= $this->smarty->getConfigVars()['login_pass'];
-       $salt= $this->smarty->getConfigVars()['salt'];
+       $config_id= $this->config_data['login']['login_id'];
+       $config_pass= $this->config_data['login']['login_pass'];
+       $salt= $this->config_data['login']['salt'];
        //conf側で管理されているものの暗号化
        $user_id = md5(md5($config_id) . md5($config_pass) . md5($salt) );
       //  ※login.phpでSESSIONに値入れている
@@ -49,11 +112,14 @@ class Utility{
       //  $_SESSION['user'] = $user_id;
        $user = $_SESSION['user'];
         if($user != $user_id){
-
-            header('Location: /login.php');
-            exit;
-          
-        }  
+            //認証失敗時
+            return false;
+        }
+        return true;
     }
+    
+
+
+
 
 }

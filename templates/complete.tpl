@@ -23,8 +23,8 @@
 </head>
 <body class="hold-transition login-page">
 
- 
-{$name}<br>
+   
+{* {$name}<br>
 {$e_mail}<br>
 {foreach $question as $key => $question_array}
  {$question_config_data[$question_array]}
@@ -35,12 +35,10 @@
 {$course}<br>
 {$comment}<br>
 {$login_id}
-{$pass}
-
-
- <br>
-  {$successful}
-  {$decline} 
+{$pass} *}
+{$ee}
+{$successful}
+{$decline} 
   
    
 

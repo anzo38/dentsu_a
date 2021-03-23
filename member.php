@@ -1,7 +1,6 @@
 <?php
 require_once('./admin.php');
-require('./database.php');
-
+require_once('./db_manager.php');
 
 
     class Member extends Admin {
@@ -110,7 +109,7 @@ require('./database.php');
           
               
              //結果を表示    
-               $result = DbMabager::getInstance()->exec($query);
+               $result = DbManager::getInstance()->exec($query);
                $this->smarty->assign('result', $result);
                 if(empty($result)){
                     $this->smarty->assign('no_data',"情報がありません");

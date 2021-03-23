@@ -1,4 +1,5 @@
 お問合わせがありました。各担当者は確認後、対応をお願いします
+{$successful_admin}
 {$auto_time}
 名前：{$name}
 メールアドレス：{$e_mail}

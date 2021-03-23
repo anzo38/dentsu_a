@@ -23,7 +23,7 @@ class Login extends Admin{
         $this->e_mail =  htmlspecialchars($_POST['login_e_mail']);
         $this->password =  htmlspecialchars($_POST['login_password']);
         $this->submit_btn = htmlspecialchars($_POST['submit_btn']);
-
+        
         //displayはexitを含むここに書かない
     }
    
@@ -31,8 +31,8 @@ class Login extends Admin{
     function execute(){
       // ログイン認証
         session_start();
-        parent::const_data();
-
+      
+       
         $config_id= $this->smarty->getConfigVars()['login_id'];
         $config_pass= $this->smarty->getConfigVars()['login_pass'];
         $salt= $this->smarty->getConfigVars()['salt'];

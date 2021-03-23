@@ -83,7 +83,7 @@ class Download extends Admin {
         
     
         //TODO　DBManagerは親クラスで保持するようにして、子供のクラスで利用するようにしましょう。
-        $result = DbMabager::getInstance()->exec($query);
+        $result = DbManager::getInstance()->exec($query);
         $csv_data="ID,名前,メールアドレス,ログインID,電話可能日"."\r\n";
         $d_q='"'; 
     //    var_dump($result);exit;
