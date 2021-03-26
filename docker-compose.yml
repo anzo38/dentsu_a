@@ -1,0 +1,67 @@
+version: '3.5'
+
+services:
+  # ---------------
+  # dentsu.local
+  # ---------------
+  dentsu.local:
+    container_name: dentsu.local
+    build:
+      # contextが場所
+      context: ./nginx
+      #  dockerfile/ ファイル名
+      dockerfile: Dockerfile
+      # ↓systemctlというコマンドを打つためのおまじない
+    tty: true
+    stdin_open: true
+    privileged: true
+    command: /sbin/init
+    volumes:
+      # nginxの設定ファイル
+      # 「.conf」は（ファイル）「conf.d」は（フォルダ）
+      - ./nginx/data/conf.d:/etc/nginx/conf.d
+      - ./nginx/entrypoint.sh:/entrypoint.sh
+      # documetn root(表示したいファイル)
+      - ../src:/data/dentsu.local/src
+      - ./nginx/logs:/data/logs/nginx
+    expose:
+      - 80
+    # depends_on:
+    #   - reverse-proxy
+    #   - webapp1_db
+    environment:
+      TZ: "Asia/Tokyo"
+    networks:
+      app_net:
+          ipv4_address: 172.1.0.2
+
+  # MySQL
+  mysql.dentsu.local:
+    image: mysql:5.7
+    container_name: mysql.dentsu.local
+    environment:
+      MYSQL_ROOT_PASSWORD: pass1234
+      MYSQL_DATABASE: dentsu
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --secure-file-priv=""
+    volumes:
+    - ./docker/mysql/data:/var/lib/mysql
+    - ./docker/mysql/my.cnf:/etc/my.cnf
+    - ./docker/mysql/sql:/docker-entrypoint-initdb.d
+    # - ./docker/mysql/csv:/tmp/data.csv
+    # - ./docker/mysql/data:/tmp
+    expose:
+    - 3306
+    networks:
+      app_net:
+          ipv4_address: 172.1.0.3
+networks:
+  app_net:
+      name: app_net
+      ipam:
+          config:
+            # 172.0.0.1〜172.0.0.254
+            #サブネットとはどこからどこまでのIPの範囲を同じネットワークとするか
+              - subnet: 172.1.0.0/24
