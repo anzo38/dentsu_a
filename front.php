@@ -1,8 +1,8 @@
 <?php
 
 require_once('smarty/Smarty.class.php');
-// require_once('./db_manager.php');
-// require('./utility.php');
+require_once('./db_manager.php');
+require('./utility.php');
 
 class Front{
     protected $smarty=null;
@@ -15,10 +15,17 @@ class Front{
     function __construct(){
        
         $this->util = new Utility();
+        // utilityのsmarty読み込み
         $this->smarty = $this->util->getSmarty();
+
         $db = $this->util->getConfigDBData();
+        // $dbはarray
+        // DB接続情報getInstance($db)
+        // $this->dbh = $dbh=DbManager::getInstance($db)->getDBH();
+        $this->dbh = DbManager::getInstance($db);
+        // $result = $this->dbh->exec("select * from inquiry");
         
-        $this->dbh = $dbh=DbManager::getInstance($db)->getDBH();    
+
         $this->config_data = $this->util->getConfigData();
     }
     // function execute(){

@@ -24,9 +24,11 @@ class Member_detail extends Admin {
 
 
     function execute(){
-        $this->results_from_db();
         // 継続的認証
-        // $this->is_auth();
+        Admin::lo();
+       
+        $this->results_from_db();
+      
       
         $this->smarty->assign('id', $this->search_id);
         $this->smarty->assign('name', $this->search_name);

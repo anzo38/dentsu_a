@@ -90,9 +90,16 @@ class Utility{
         return $config_data;
     }
   
-  
-
-  
+    public function getConfigLoginData(){
+        $config_id= $this->config_data['login']['login_id'];
+      
+        $config_pass= $this->config_data['login']['login_pass'];
+        $salt= $this->config_data['login']['login_salt'];
+        //conf側で管理されているものの暗号化
+        $user_id = md5(md5($config_id) . md5($config_pass) . md5($salt) );
+        return $user_id;
+    }
+   
     // 継続的認証
     public function is_auth() : bool {
         
@@ -102,24 +109,24 @@ class Utility{
      * TODO：継続的認証という関数がわかるような命名にすること：済
      * 例）is_auth,isAuthなどの文字が好ましい
      */
-       $config_id= $this->config_data['login']['login_id'];
-       $config_pass= $this->config_data['login']['login_pass'];
-       $salt= $this->config_data['login']['salt'];
-       //conf側で管理されているものの暗号化
-       $user_id = md5(md5($config_id) . md5($config_pass) . md5($salt) );
+    // $config_id= $this->config_data['login']['login_id'];
+      
+    // $config_pass= $this->config_data['login']['login_pass'];
+    // $salt= $this->config_data['login']['login_salt'];
+    // //conf側で管理されているものの暗号化
+    // $user_id = md5(md5($config_id) . md5($config_pass) . md5($salt) );
+
       //  ※login.phpでSESSIONに値入れている
       //  ここ↓で入れ直すと無条件でcong管理の値を格納している
-      //  $_SESSION['user'] = $user_id;
+    //    $_SESSION['user'] = $user_id;
        $user = $_SESSION['user'];
-        if($user != $user_id){
-            //認証失敗時
-            return false;
-        }
+
+            if($user != $this->getConfigLoginData()){
+                //認証失敗時
+                return false;
+            }
         return true;
     }
-    
-
-
-
+ 
 
 }

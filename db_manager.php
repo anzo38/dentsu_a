@@ -53,14 +53,15 @@ class DbManager {
         return self::$singleton;
     }
 
-    public function insert($query){
+    // public function insert($query){
     
-        return  $query;
-    }
+    //     return  $query;
+    // }
 
     public function exec($query){
-        $this->execute();
+
         $stmt = $this->dbh->query($query);
+
         $ary_db_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return  $ary_db_data;
     }

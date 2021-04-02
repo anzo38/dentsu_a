@@ -1,8 +1,8 @@
 <?php
 // require_once('./db_manager.php');
 require_once('front.php');
-require_once('utility.php');
-require_once('db_manager.php');
+// require_once('utility.php');
+// require_once('db_manager.php');
 
 // require('validate.php');
 
@@ -82,10 +82,10 @@ class Contact extends Front {
    */
 //   入力画面
     function gui1(){
-
-        $this->smarty->assign("question_config_data",$this->config_data["question"]);
-        $this->smarty->assign("category_config_data",$this->config_data["category"]);
-        $this->smarty->assign("course_config_data",$this->config_data["course"]);
+        $this->assign_value();
+        // $this->smarty->assign("question_config_data",$this->config_data["question"]);
+        // $this->smarty->assign("category_config_data",$this->config_data["category"]);
+        // $this->smarty->assign("course_config_data",$this->config_data["course"]);
         $this->smarty->display('input.tpl');
     }
 
@@ -95,6 +95,7 @@ class Contact extends Front {
   //サインアップ画面
     function gui2(){
      
+        
       // $this->load_config_data();
         if($this->validate()){
             // $this->load_config_data();
@@ -102,6 +103,8 @@ class Contact extends Front {
             $this->smarty->display('input.tpl');
         }else{
             $this->assign_value();
+           
+            
             // $this->load_config_data();
             $this->smarty->display('signup.tpl');
         }
@@ -140,7 +143,7 @@ class Contact extends Front {
    */
    //完了画面
     function gui4(){
-        // parent::const_data();
+       
         // $this->load_config_data();
         $this->insert_data_to_db();
         $this->assign_value();
@@ -172,14 +175,14 @@ class Contact extends Front {
 
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
-        
-        // if(mb_send_mail($this->e_mail,$title,$message,$header,'-f' . $mailto)){
-        //     if(mb_send_mail($mailto_admin,$title_admin,$message_admin,$header_admin,'-f' . $mailto_admin)) {
-        //         $this->smarty->assign('successful', $this->smarty->getConfigVars("SUCCESSFUL"));
-        //         }else{
-        //         $this->smarty->assign('decline', $this->smarty->getConfigVars("DECLINE"));
-        //     }
-        // }
+   
+        if(mb_send_mail($this->e_mail,$title,$message,$header,'-f' . $mailto)){
+            if(mb_send_mail($mailto_admin,$title_admin,$message_admin,$header_admin,'-f' . $mailto_admin)) {
+                $this->smarty->assign('successful', $this->smarty->getConfigVars("SUCCESSFUL"));
+                }else{
+                $this->smarty->assign('decline', $this->smarty->getConfigVars("DECLINE"));
+            }
+        }
         $this->smarty->display('complete.tpl');  
     }
 
@@ -190,13 +193,10 @@ class Contact extends Front {
   * TODO：下記のようなDB接続関数は一番上の親クラスがObjectとしてもっておくようにしましょう。:済 
   */
     function insert_data_to_db(){
-        
        //contactテーブル
         $contact = 'INSERT INTO contact (name, e_mail, category, date, time_start, time_end, course, comment, login_id)  VALUE (:name, :e_mail, :category, :date, :time_start, :time_end, :course, :comment, :login_id)';
-        // parent::db_conect();
         // DbManagerでいんさーと試みたが組み方わからず
         $prepare=$this->dbh->prepare($contact);
-       
         // $prepare = parent::db_conect()->prepare($contact);
         $prepare->bindValue(':name', $this->name, PDO::PARAM_STR);
         $prepare->bindValue(':e_mail', $this->e_mail, PDO::PARAM_STR);
@@ -207,30 +207,18 @@ class Contact extends Front {
         $prepare->bindValue(':course', $this->course, PDO::PARAM_STR);
         $prepare->bindValue(':comment', $this->comment, PDO::PARAM_STR);
         $prepare->bindValue(':login_id', $this->login_id, PDO::PARAM_STR);
-        
         $prepare ->execute();
         
-        // $last_id = $this->db_conect()->lastInsertId("id");
-        $last_id = $this->dbh->lastInsertId();
-       
-
+        
        //questionテーブル
-       //questionの$last_id取得できない
+        $last_id = $this->dbh->lastInsertId();
         $questions = 'INSERT INTO questions (contact_id, question)  VALUE (:contact_id, :question)';
         $prepare=$this->dbh->prepare($questions);
-        
-        var_dump($prepare);
-        var_dump($last_id);
         $prepare->bindValue(':contact_id', $last_id, PDO::PARAM_INT);
-       
-        // foreach($this->question as $k => $v){
-        //     $prepare->bindValue(':question', $v, PDO::PARAM_STR);
-        //     $prepare ->execute();
-        // }
-
-       
-     
-
+        foreach($this->question as $k => $v){
+            $prepare->bindValue(':question', $v, PDO::PARAM_STR);
+            $prepare ->execute();
+        }
     }
 
  
@@ -289,6 +277,9 @@ class Contact extends Front {
         $this->smarty->assign('login_id', $this->login_id);
         $this->smarty->assign('pass', $this->pass);
         
+        $this->smarty->assign("question_config_data",$this->config_data["question"]);
+        $this->smarty->assign("category_config_data",$this->config_data["category"]);
+        $this->smarty->assign("course_config_data",$this->config_data["course"]);
         date_default_timezone_set('Asia/Tokyo');
         $this->smarty->assign('auto_time',"お問い合わせ日時：" . date("Y-m-d H:i"));
     }

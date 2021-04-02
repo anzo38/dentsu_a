@@ -3,21 +3,26 @@ require_once('front.php');
 
 
 class Admin extends Front{
-
+    
     // protected $util;
 
     function __construct(){
-        session_start();
+        
         // Smarty
         parent::__construct();
-        
-        /**
-         * 継続的認証の実行
-         */
+        session_start();
+       
+       
+    }
+
+  
+    function lo(){
         if(!$this->util->is_auth()){
             header('Location: /login.php');
-            exit;
-        }
+           
+        } 
+    }
+  
         /*親が既にグローバル変数＄smartyを持っているので
          * 引数に使えるオブジェクﾄが↑のコンストラクタで既に存在する
          * Utilityクラスでもsmartyが使えるようになる
@@ -29,7 +34,7 @@ class Admin extends Front{
          * ｝
          */
         // $this->util=new Utility($this->smarty);
-    }
+    
 
 
 

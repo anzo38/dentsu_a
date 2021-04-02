@@ -1,6 +1,6 @@
 <?php
 require_once('./admin.php');
-require_once('./db_manager.php');
+// require_once('./db_manager.php');
 
 
     class Member extends Admin {
@@ -16,7 +16,7 @@ require_once('./db_manager.php');
             parent::__construct();
             $this->member = htmlspecialchars($_GET['member']);
             $this->search = htmlspecialchars($_POST['search']);
-
+              
             // $this->gui = htmlspecialchars($_GET['member']);
             $csv_dl=$_POST["csv_dl"];
         }
@@ -25,8 +25,8 @@ require_once('./db_manager.php');
 
         function execute(){
             // 継続的認証
-            $this->util->is_auth();
-
+           Admin::lo();
+       
             if($this->member == 1){
                 //検索結果の表示の遷移先
                 $this->member1();
@@ -66,54 +66,72 @@ require_once('./db_manager.php');
             $search_date=htmlspecialchars($_POST["search_date"]);
             //TODO htmlspecialcharsを利用しましょう。:済
             $back=htmlspecialchars($_POST["back"]);
-           
-
-            //echo (Dbmanager->exec("select * from inquiry;"));
+            
+            // echo (Dbmanager->exec("select * from inquiry;"));
             // sql文
             $q_id="\n  id = '" . $search_id . "'";
             $q_name="\n name like '" . $search_name . "%". "'";
             $q_e_mail="\n e_mail like '" . "%" . $search_e_mail . "%". "'";
             $q_login_id="\n login_id like '" . $search_login_id . "%". "'";
             $q_date="\n  date = '" . $search_date . "'";
-
+            // ini_set('display_errors', "On");
             $d_q='"';
-        
-            $query="SELECT * FROM contact WHERE 1=1";
+            // $this->dbh;
+            // $query="SELECT * FROM contact WHERE 1=1";
+            $query="SELECT * FROM contact WHERE id= 3";
+            // ini_set('display_errors', "On");
+            $e=$this->dbh->exec($query);
+           
+                // $prepare->bindValue(1, $q_id);
+                // $prepare->execute();
+                // echo $query;
+                var_dump($e);
+            // $result=$this->dbh->exec($query);          
+            // $prepare=$this->dbh->prepare($query);
+            // $r=$this->dbh;
+            
           // ※1-1で全てANDで繋げれる
             if($search || $back){
-                
-                
-                if(!empty($search_id)) {
-                    $query .= "\n" . "AND" .$q_id;
+               
+                // var_dump($this->dbh->exec($query));
+                // $this->dbh;
+                // if(!empty($search_id)) {
+                //     $query .= "\n" . "AND" .$q_id;
+                //     // $prepare->bindValue(':q_id', $q_id);
                     $this->smarty->assign('id', $search_id);
-                    
-                }
-                if(!empty($search_name)) {
+                   
+                // }
+                // if(!empty($search_name)) {
                 
-                    $query .="\n" ."AND" .$q_name;
-                    $this->smarty->assign('name', $search_name);
-                 }
-                if(!empty($search_e_mail)) {
+                //     $query .="\n" ."AND" .$q_name;
+                //     $this->smarty->assign('name', $search_name);
+                   
+                //  }
+                // if(!empty($search_e_mail)) {
                   
-                    $query .="\n" ."AND" .$q_e_mail;
-                    $this->smarty->assign('e_mail', $search_e_mail);
-                }
-                if(!empty($search_login_id)) {
-                    $query .="\n" ."AND" .$q_login_id;
-                    $this->smarty->assign('login_id', $search_login_id);
-                }
-                if(!empty($search_date)) {
-                    $query .="\n" ."AND" .$q_date;
-                    $this->smarty->assign('date', $search_date);
-                }
-          
-              
+                //     $query .="\n" ."AND" .$q_e_mail;
+                //     $this->smarty->assign('e_mail', $search_e_mail);
+                // }
+                // if(!empty($search_login_id)) {
+                //     $query .="\n" ."AND" .$q_login_id;
+                //     $this->smarty->assign('login_id', $search_login_id);
+                // }
+                // if(!empty($search_date)) {
+                //     $query .="\n" ."AND" .$q_date;
+                //     $this->smarty->assign('date', $search_date);
+                // }
+                
+                // $prepare->execute();
+               
+               
+            //     $this->smarty->assign('result', $result);
+            //    var_dump($result);
              //結果を表示    
-               $result = DbManager::getInstance()->exec($query);
-               $this->smarty->assign('result', $result);
-                if(empty($result)){
-                    $this->smarty->assign('no_data',"情報がありません");
-                }
+            //    $result = DbManager::getInstance()->exec($query);
+            //    $this->smarty->assign('result', $result);
+            //     if(empty($result)){
+            //         $this->smarty->assign('no_data',"情報がありません");
+            // }
                 /**
                  * TODO:下記は全てtplにもっていくこと。：済
                  * TODO:member.tplは複数のTPLで構成されているが、一つのTPLでまとめて処理をすること。
